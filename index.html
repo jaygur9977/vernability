@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VulnScan AI | Centralized Vulnerability Detection</title>
+    <title>VulnScan AI | Advanced Vulnerability Detection</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="dark">
     <!-- Header -->
@@ -34,8 +34,9 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-bg"></div>
+        <div class="matrix-bg"></div>
         <div class="hero-content">
-            <h1>Advanced Threat Detection & Analysis</h1>
+            <h1 class="floating-animation">Advanced Threat Detection & Analysis</h1>
             <p>Identify, prioritize, and remediate security vulnerabilities with AI-powered insights and comprehensive reporting</p>
             
             <div class="scanner-container">
@@ -73,7 +74,7 @@
             </div>
             
             <div class="cta-buttons">
-                <a href="#target-section" class="btn btn-primary">
+                <a href="#target-section" class="btn btn-primary pulse-animation">
                     <i class="fas fa-rocket"></i>
                     Start Scanning
                 </a>
@@ -177,12 +178,33 @@
         </div>
     </section>
 
+    <!-- Password Modal -->
+    <div class="modal password-modal" id="passwordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Authentication Required</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Please enter your credentials to start the security scan:</p>
+                <input type="text" class="scanner-name" id="scannerName" placeholder="Enter your name">
+                <input type="password" class="password-input" id="passwordInput" placeholder="Enter passcode">
+                <button class="btn btn-primary" id="authenticateBtn">Authenticate & Start Scan</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scan Progress Modal -->
     <div class="modal" id="scanModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Security Scan in Progress</h3>
                 <button class="close-modal">&times;</button>
+            </div>
+            
+            <div class="scanner-info">
+                <span>Scanner: <span id="scannerDisplayName">Unknown</span></span>
+                <span>Target: <span id="scanTargetDisplay">shopka.example</span></span>
             </div>
             
             <div class="scan-progress">
@@ -231,6 +253,10 @@
                             <span class="meta-label">Scan Duration</span>
                             <span class="meta-value" id="reportDuration">2 minutes 45 seconds</span>
                         </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Scanner</span>
+                            <span class="meta-value" id="reportScanner">Unknown</span>
+                        </div>
                     </div>
                 </div>
                 <div class="report-actions">
@@ -264,6 +290,55 @@
                 </div>
             </div>
             
+            <!-- Attack Path Overview -->
+            <div class="attack-path-overview fade-in">
+                <h3>Attack Path Visualization</h3>
+                <p>This graph shows how attackers could exploit vulnerabilities in your system. Click on any vulnerability node for details.</p>
+                
+                <div class="attack-path-graph" id="attackPathGraph">
+                    <!-- Graph will be populated by JavaScript -->
+                </div>
+                
+                <div class="graph-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--danger);"></div>
+                        <span>Critical</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--warning);"></div>
+                        <span>High</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--info);"></div>
+                        <span>Medium</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--success);"></div>
+                        <span>Low</span>
+                    </div>
+                </div>
+                
+                <div class="priority-list">
+                    <h4>Fix Priority Order:</h4>
+                    <div class="priority-item">
+                        <div class="priority-number">1</div>
+                        <div>F-001: Outdated WP Payments plugin (Critical)</div>
+                    </div>
+                    <div class="priority-item">
+                        <div class="priority-number">2</div>
+                        <div>F-002: Open SSH with weak password policy (High)</div>
+                    </div>
+                    <div class="priority-item">
+                        <div class="priority-number">3</div>
+                        <div>F-003: SQL Injection in login form (High)</div>
+                    </div>
+                    <div class="priority-item">
+                        <div class="priority-number">4</div>
+                        <div>F-004: Missing security headers (Medium)</div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="report-layout">
                 <div class="findings-list" id="findingsList">
                     <!-- Findings will be populated here -->
@@ -278,8 +353,10 @@
                                 You can ask me questions like:<br>
                                 - "Is this urgent?"<br>
                                 - "Kisko pehle fix karna chahiye?"<br>
+                                - "koi aur dikkat to nahi hai na?"<br>
+                                - "kuch bhi pareshani hone per merese pucho?"<br>
                                 - "Attack path dikhao for finding #1"<br>
-                                - "Mitigation steps for CVE-2021-XXXXX"
+                                - "Mitigation steps for CVE-2021-68734"
                             </div>
                         </div>
                         <div class="chat-input-container">
@@ -305,7 +382,7 @@
                 <div class="attack-path" id="attackPath">
                     <div class="node node-internet" data-tooltip="External attacker with network access">Internet</div>
                     <div class="node node-service" data-tooltip="Vulnerable service exposed to the internet">Web Service (Port 80/443)</div>
-                    <div class="node node-vuln" data-tooltip="Specific vulnerability allowing unauthorized access">Vulnerability: CVE-2021-XXXXX</div>
+                    <div class="node node-vuln" data-tooltip="Specific vulnerability allowing unauthorized access">Vulnerability: CVE-2021-45372</div>
                     <div class="node node-db" data-tooltip="Sensitive data storage">Database</div>
                     
                     <!-- Connections -->

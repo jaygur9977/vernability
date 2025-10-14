@@ -1,6 +1,4 @@
 
-        // Persona: Acting as 30-40 year old UI/UX & System Designer
-        
         // Mock data
         const mockData = {
             "target": "shopka.example",
@@ -11,16 +9,26 @@
                     "id": "F-001",
                     "title": "Outdated WP Payments plugin",
                     "severity": "Critical",
-                    "cve": "CVE-2021-XXXXX",
+                    "cve": "CVE-2021-73492",
                     "cvss": 9.1,
                     "description": "Plugin allows arbitrary file upload via 'amount' parameter. This vulnerability could allow an attacker to upload malicious files to the server and potentially execute arbitrary code.",
                     "component": "WordPress plugin wp-payments v1.2",
                     "evidence": "HTTP response shows /wp-content/plugins/wp-payments/pay.php with vulnerable param 'amount'",
                     "references": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2021-XXXXX",
+                        "https://nvd.nist.gov/vuln/detail/CVE-2021-89263",
                         "https://exploit-db.com/exploit/12345"
                     ],
-                    "raw_output": "[nuclei] matched template wp-payments-vuln - /pay.php - param 'amount'...\n[nuclei] [CRITICAL] Arbitrary file upload vulnerability detected\n[nuclei] Payload sent: malicious_file.exe via amount parameter\n[nuclei] Server responded with 200 OK - file uploaded successfully"
+                    "raw_output": "[nuclei] matched template wp-payments-vuln - /pay.php - param 'amount'...\n[nuclei] [CRITICAL] Arbitrary file upload vulnerability detected\n[nuclei] Payload sent: malicious_file.exe via amount parameter\n[nuclei] Server responded with 200 OK - file uploaded successfully",
+                    "attack_path": {
+                        "steps": [
+                            "Attacker identifies vulnerable plugin",
+                            "Exploits file upload vulnerability",
+                            "Uploads malicious file to server",
+                            "Gains remote code execution",
+                            "Accesses sensitive data"
+                        ],
+                        "impact": "Complete system compromise"
+                    }
                 },
                 {
                     "id": "F-002",
@@ -32,21 +40,41 @@
                     "component": "OpenSSH 7.2p2",
                     "evidence": "SSH allows password login; login attempts not rate-limited.",
                     "references": [],
-                    "raw_output": "[nmap] 22/tcp open ssh OpenSSH 7.2p2\n[hydra] SSH brute force successful with weak credentials: admin:admin123\n[scan] No rate limiting detected - 1000 attempts per minute allowed"
+                    "raw_output": "[nmap] 22/tcp open ssh OpenSSH 7.2p2\n[hydra] SSH brute force successful with weak credentials: admin:admin123\n[scan] No rate limiting detected - 1000 attempts per minute allowed",
+                    "attack_path": {
+                        "steps": [
+                            "Attacker scans for open SSH port",
+                            "Identifies weak password policy",
+                            "Performs brute force attack",
+                            "Gains SSH access",
+                            "Escalates privileges"
+                        ],
+                        "impact": "Server access and potential privilege escalation"
+                    }
                 },
                 {
                     "id": "F-003",
                     "title": "SQL Injection in login form",
                     "severity": "High",
-                    "cve": "CVE-2020-YYYYY",
+                    "cve": "CVE-2020-58723",
                     "cvss": 8.2,
                     "description": "Login form vulnerable to SQL injection attacks. Attackers could bypass authentication or extract sensitive data from the database.",
                     "component": "Custom login script login.php",
                     "evidence": "SQL errors returned when injecting special characters in username field.",
                     "references": [
-                        "https://nvd.nist.gov/vuln/detail/CVE-2020-YYYYY"
+                        "https://nvd.nist.gov/vuln/detail/CVE-2020-69284"
                     ],
-                    "raw_output": "[sqlmap] testing login.php\n[sqlmap] parameter 'username' is vulnerable\n[sqlmap] payload: admin' OR '1'='1\n[sqlmap] database type: MySQL\n[sqlmap] current user: root@localhost"
+                    "raw_output": "[sqlmap] testing login.php\n[sqlmap] parameter 'username' is vulnerable\n[sqlmap] payload: admin' OR '1'='1\n[sqlmap] database type: MySQL\n[sqlmap] current user: root@localhost",
+                    "attack_path": {
+                        "steps": [
+                            "Attacker identifies SQL injection point",
+                            "Exploits injection to bypass authentication",
+                            "Extracts database information",
+                            "Accesses sensitive user data",
+                            "Potentially modifies database content"
+                        ],
+                        "impact": "Data breach and unauthorized access"
+                    }
                 },
                 {
                     "id": "F-004",
@@ -58,7 +86,16 @@
                     "component": "Web server configuration",
                     "evidence": "HTTP response headers analysis shows missing security headers.",
                     "references": [],
-                    "raw_output": "[securityheaders] X-Content-Type-Options: missing\n[securityheaders] X-Frame-Options: missing\n[securityheaders] Content-Security-Policy: missing\n[securityheaders] Strict-Transport-Security: missing"
+                    "raw_output": "[securityheaders] X-Content-Type-Options: missing\n[securityheaders] X-Frame-Options: missing\n[securityheaders] Content-Security-Policy: missing\n[securityheaders] Strict-Transport-Security: missing",
+                    "attack_path": {
+                        "steps": [
+                            "Attacker identifies missing security headers",
+                            "Exploits clickjacking vulnerability",
+                            "Tricks user into performing actions",
+                            "Potentially steals sensitive information"
+                        ],
+                        "impact": "User data exposure and session hijacking"
+                    }
                 }
             ]
         };
@@ -73,7 +110,13 @@
         const fileName = document.getElementById('fileName');
         const authCheckbox = document.getElementById('authCheckbox');
         const startScanBtn = document.getElementById('startScanBtn');
+        const passwordModal = document.getElementById('passwordModal');
+        const scannerName = document.getElementById('scannerName');
+        const passwordInput = document.getElementById('passwordInput');
+        const authenticateBtn = document.getElementById('authenticateBtn');
         const scanModal = document.getElementById('scanModal');
+        const scannerDisplayName = document.getElementById('scannerDisplayName');
+        const scanTargetDisplay = document.getElementById('scanTargetDisplay');
         const progressFill = document.getElementById('progressFill');
         const progressPercent = document.getElementById('progressPercent');
         const scanLogs = document.getElementById('scanLogs');
@@ -81,11 +124,13 @@
         const reportTarget = document.getElementById('reportTarget');
         const reportDate = document.getElementById('reportDate');
         const reportDuration = document.getElementById('reportDuration');
+        const reportScanner = document.getElementById('reportScanner');
         const criticalCount = document.getElementById('criticalCount');
         const highCount = document.getElementById('highCount');
         const mediumCount = document.getElementById('mediumCount');
         const lowCount = document.getElementById('lowCount');
         const findingsList = document.getElementById('findingsList');
+        const attackPathGraph = document.getElementById('attackPathGraph');
         const chatMessages = document.getElementById('chatMessages');
         const chatInput = document.getElementById('chatInput');
         const sendChatBtn = document.getElementById('sendChatBtn');
@@ -209,12 +254,38 @@
             startScanBtn.disabled = !(isValid && authCheckbox.checked);
         }
 
-        // Start Scan
-        startScanBtn.addEventListener('click', startScan);
+        // Start Scan - Show Password Modal
+        startScanBtn.addEventListener('click', () => {
+            passwordModal.classList.add('active');
+        });
 
-        function startScan() {
+        // Authenticate and Start Scan
+        authenticateBtn.addEventListener('click', () => {
+            const name = scannerName.value.trim();
+            const password = passwordInput.value;
+            
+            if (!name) {
+                showToast("Please enter your name", "error");
+                return;
+            }
+            
+            if (password !== "admin123") {
+                showToast("Invalid passcode. Please try again.", "error");
+                return;
+            }
+            
+            // Close password modal and start scan
+            passwordModal.classList.remove('active');
+            startScan(name);
+        });
+
+        function startScan(scannerName) {
             // Show scan modal
             scanModal.classList.add('active');
+            
+            // Set scanner name and target
+            scannerDisplayName.textContent = scannerName;
+            scanTargetDisplay.textContent = domainInput.value || ipInput.value || "Uploaded file";
             
             // Clear previous logs
             scanLogs.innerHTML = '<div class="log-entry"><span class="log-time">[19:00:00]</span><span>Initializing scanner...</span></div>';
@@ -267,7 +338,7 @@
                     setTimeout(() => {
                         scanModal.classList.remove('active');
                         reportSection.classList.add('active');
-                        renderFindings();
+                        renderFindings(scannerName);
                         
                         // Scroll to report section
                         reportSection.scrollIntoView({ behavior: 'smooth' });
@@ -277,7 +348,7 @@
         }
 
         // Render Findings
-        function renderFindings() {
+        function renderFindings(scannerName) {
             // Update report metadata
             reportTarget.textContent = mockData.target;
             reportDate.textContent = new Date(mockData.scan_time).toLocaleDateString('en-US', { 
@@ -286,6 +357,7 @@
                 day: 'numeric' 
             });
             reportDuration.textContent = mockData.scan_duration;
+            reportScanner.textContent = scannerName;
             
             // Count vulnerabilities by severity
             const severityCounts = {
@@ -368,11 +440,204 @@
                     showEvidence(findingId);
                 });
             });
+            
+            // Render attack path graph
+            renderAttackPathGraph();
+        }
+
+        // Render Attack Path Graph
+        function renderAttackPathGraph() {
+            attackPathGraph.innerHTML = '';
+            
+            // Create nodes for each vulnerability
+            const vulnerabilities = mockData.findings;
+            const colors = {
+                critical: 'var(--danger)',
+                high: 'var(--warning)',
+                medium: 'var(--info)',
+                low: 'var(--success)'
+            };
+            
+            // Create internet node
+            const internetNode = document.createElement('div');
+            internetNode.className = 'graph-node';
+            internetNode.textContent = 'Internet';
+            internetNode.style.backgroundColor = 'var(--secondary)';
+            internetNode.style.top = '50px';
+            internetNode.style.left = '50px';
+            internetNode.setAttribute('data-tooltip', 'External attacker with network access');
+            attackPathGraph.appendChild(internetNode);
+            
+            // Create service node
+            const serviceNode = document.createElement('div');
+            serviceNode.className = 'graph-node';
+            serviceNode.textContent = 'Web Service';
+            serviceNode.style.backgroundColor = 'var(--accent)';
+            serviceNode.style.color = 'var(--primary)';
+            serviceNode.style.top = '50px';
+            serviceNode.style.right = '50px';
+            serviceNode.setAttribute('data-tooltip', 'Vulnerable service exposed to the internet');
+            attackPathGraph.appendChild(serviceNode);
+            
+            // Create vulnerability nodes
+            vulnerabilities.forEach((vuln, index) => {
+                const vulnNode = document.createElement('div');
+                vulnNode.className = 'graph-node';
+                vulnNode.textContent = vuln.id;
+                vulnNode.style.backgroundColor = colors[vuln.severity.toLowerCase()];
+                vulnNode.style.top = `${120 + index * 50}px`;
+                vulnNode.style.left = '50%';
+                vulnNode.style.transform = 'translateX(-50%)';
+                vulnNode.setAttribute('data-tooltip', `${vuln.title} (${vuln.severity}) - ${vuln.description.substring(0, 100)}...`);
+                vulnNode.setAttribute('data-finding-id', vuln.id);
+                attackPathGraph.appendChild(vulnNode);
+                
+                // Add click event to show attack path
+                vulnNode.addEventListener('click', () => {
+                    showAttackPath(vuln.id);
+                });
+            });
+            
+            // Create database node
+            const dbNode = document.createElement('div');
+            dbNode.className = 'graph-node';
+            dbNode.textContent = 'Database';
+            dbNode.style.backgroundColor = 'var(--success)';
+            dbNode.style.bottom = '50px';
+            dbNode.style.left = '50%';
+            dbNode.style.transform = 'translateX(-50%)';
+            dbNode.setAttribute('data-tooltip', 'Sensitive data storage');
+            attackPathGraph.appendChild(dbNode);
+            
+            // Create connections
+            createGraphConnection(internetNode, serviceNode);
+            
+            vulnerabilities.forEach((vuln, index) => {
+                const vulnNode = attackPathGraph.querySelector(`[data-finding-id="${vuln.id}"]`);
+                createGraphConnection(serviceNode, vulnNode);
+                createGraphConnection(vulnNode, dbNode);
+            });
+            
+            // Add hover effects for nodes
+            const graphNodes = attackPathGraph.querySelectorAll('.graph-node');
+            const graphTooltip = document.createElement('div');
+            graphTooltip.className = 'graph-tooltip';
+            attackPathGraph.appendChild(graphTooltip);
+            
+            graphNodes.forEach(node => {
+                node.addEventListener('mouseenter', (e) => {
+                    const tooltip = e.target.getAttribute('data-tooltip');
+                    if (tooltip) {
+                        graphTooltip.textContent = tooltip;
+                        graphTooltip.style.display = 'block';
+                        
+                        // Position tooltip near the node
+                        const rect = e.target.getBoundingClientRect();
+                        const containerRect = attackPathGraph.getBoundingClientRect();
+                        graphTooltip.style.left = `${rect.left - containerRect.left + rect.width/2}px`;
+                        graphTooltip.style.top = `${rect.top - containerRect.top - 50}px`;
+                    }
+                });
+                
+                node.addEventListener('mouseleave', () => {
+                    graphTooltip.style.display = 'none';
+                });
+            });
+        }
+
+        // Create connection between two nodes in the graph
+        function createGraphConnection(fromNode, toNode) {
+            const connection = document.createElement('div');
+            connection.className = 'graph-connection';
+            
+            const fromRect = fromNode.getBoundingClientRect();
+            const toRect = toNode.getBoundingClientRect();
+            const containerRect = attackPathGraph.getBoundingClientRect();
+            
+            const fromX = fromRect.left + fromRect.width/2 - containerRect.left;
+            const fromY = fromRect.top + fromRect.height/2 - containerRect.top;
+            const toX = toRect.left + toRect.width/2 - containerRect.left;
+            const toY = toRect.top + toRect.height/2 - containerRect.top;
+            
+            const length = Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2));
+            const angle = Math.atan2(toY - fromY, toX - fromX) * 180 / Math.PI;
+            
+            connection.style.width = `${length}px`;
+            connection.style.left = `${fromX}px`;
+            connection.style.top = `${fromY}px`;
+            connection.style.transform = `rotate(${angle}deg)`;
+            
+            attackPathGraph.appendChild(connection);
         }
 
         // Show Attack Path
         function showAttackPath(findingId) {
+            const finding = mockData.findings.find(f => f.id === findingId);
+            if (!finding) return;
+            
             attackPathModal.classList.add('active');
+            
+            // Update modal title
+            document.querySelector('.attack-path-modal .modal-title').textContent = `Attack Path: ${finding.title}`;
+            
+            // Clear previous content
+            const attackPath = document.getElementById('attackPath');
+            attackPath.innerHTML = '';
+            
+            // Create nodes based on the attack path steps
+            const steps = finding.attack_path.steps;
+            const impact = finding.attack_path.impact;
+            
+            // Create nodes
+            const internetNode = document.createElement('div');
+            internetNode.className = 'node node-internet';
+            internetNode.textContent = 'Internet';
+            internetNode.style.top = '50px';
+            internetNode.style.left = '50px';
+            internetNode.setAttribute('data-tooltip', 'External attacker with network access');
+            attackPath.appendChild(internetNode);
+            
+            // Create service node
+            const serviceNode = document.createElement('div');
+            serviceNode.className = 'node node-service';
+            serviceNode.textContent = 'Target Service';
+            serviceNode.style.top = '50px';
+            serviceNode.style.right = '50px';
+            serviceNode.setAttribute('data-tooltip', 'Vulnerable service exposed to the internet');
+            attackPath.appendChild(serviceNode);
+            
+            // Create vulnerability node
+            const vulnNode = document.createElement('div');
+            vulnNode.className = 'node node-vuln';
+            vulnNode.textContent = finding.id;
+            vulnNode.style.top = '150px';
+            vulnNode.style.left = '50%';
+            vulnNode.style.transform = 'translateX(-50%)';
+            vulnNode.setAttribute('data-tooltip', `${finding.title} (${finding.severity})`);
+            attackPath.appendChild(vulnNode);
+            
+            // Create step nodes
+            steps.forEach((step, index) => {
+                const stepNode = document.createElement('div');
+                stepNode.className = 'node';
+                stepNode.textContent = `Step ${index + 1}`;
+                stepNode.style.backgroundColor = 'var(--info)';
+                stepNode.style.top = `${250 + index * 60}px`;
+                stepNode.style.left = '50%';
+                stepNode.style.transform = 'translateX(-50%)';
+                stepNode.setAttribute('data-tooltip', step);
+                attackPath.appendChild(stepNode);
+            });
+            
+            // Create impact node
+            const impactNode = document.createElement('div');
+            impactNode.className = 'node node-db';
+            impactNode.textContent = 'Impact';
+            impactNode.style.bottom = '50px';
+            impactNode.style.left = '50%';
+            impactNode.style.transform = 'translateX(-50%)';
+            impactNode.setAttribute('data-tooltip', impact);
+            attackPath.appendChild(impactNode);
             
             // Draw connections
             drawConnections();
@@ -399,20 +664,15 @@
 
         // Draw connections between nodes
         function drawConnections() {
-            const nodes = {
-                internet: document.querySelector('.node-internet'),
-                service: document.querySelector('.node-service'),
-                vuln: document.querySelector('.node-vuln'),
-                db: document.querySelector('.node-db')
-            };
+            const nodes = document.querySelectorAll('.node');
+            const connections = [];
             
-            const connections = {
-                conn1: { from: nodes.internet, to: nodes.service },
-                conn2: { from: nodes.service, to: nodes.vuln },
-                conn3: { from: nodes.vuln, to: nodes.db }
-            };
+            // Create connections between consecutive nodes
+            for (let i = 0; i < nodes.length - 1; i++) {
+                connections.push({ from: nodes[i], to: nodes[i + 1] });
+            }
             
-            for (const [connId, conn] of Object.entries(connections)) {
+            connections.forEach((conn, index) => {
                 const fromRect = conn.from.getBoundingClientRect();
                 const toRect = conn.to.getBoundingClientRect();
                 const containerRect = document.getElementById('attackPath').getBoundingClientRect();
@@ -425,12 +685,16 @@
                 const length = Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2));
                 const angle = Math.atan2(toY - fromY, toX - fromX) * 180 / Math.PI;
                 
-                const connection = document.getElementById(connId);
+                const connection = document.createElement('div');
+                connection.className = 'connection';
+                connection.id = `conn-${index}`;
                 connection.style.width = `${length}px`;
                 connection.style.left = `${fromX}px`;
                 connection.style.top = `${fromY}px`;
                 connection.style.transform = `rotate(${angle}deg)`;
-            }
+                
+                document.getElementById('attackPath').appendChild(connection);
+            });
         }
 
         // Show Evidence
@@ -509,16 +773,25 @@
             
             // Simple keyword-based response generation
             if (lowerMessage.includes('urgent') || lowerMessage.includes('priority')) {
-                return "Haan — F-001 Critical (CVE-2021-XXXXX) ka exploit public hai. Top 3 actions: 1) Disable plugin immediately 2) Apply vendor patch 3) Rotate DB credentials.";
+                return "Haan — F-001 Critical (CVE-2021-73492) ka exploit public hai. Top 3 actions: 1) Disable plugin immediately 2) Apply vendor patch 3) Rotate DB credentials.";
             } else if (lowerMessage.includes('kisko') && lowerMessage.includes('pehle')) {
                 return "Pehle F-001 (Critical) ko fix karo — WordPress plugin vulnerability hai. Phir F-002 (High) — SSH weak policy. F-003 (High) SQL injection bhi important hai.";
-            } else if (lowerMessage.includes('attack path') && lowerMessage.includes('finding')) {
-                const findingMatch = message.match(/finding\s*#?(\w+)/i);
-                if (findingMatch) {
-                    const findingId = findingMatch[1].toUpperCase();
-                    return `Attack path for ${findingId}: Internet → Web Service → ${findingId} Vulnerability → Database. Isme attacker directly database tak pahunch sakta hai.`;
+            } else if (lowerMessage.includes('koi') && lowerMessage.includes('dikkat')) {
+                return "Tum ek bar aur scan karwa lo. Filhal toh bas yeh 4 vulnerabilities mili hain. Lekin agar tumhe lagta hai kuch aur dikkat ho sakti hai, toh mujhe batao.";
+            } else if (lowerMessage.includes('kuch') && lowerMessage.includes('pareshani')) {
+                return "Haan batao bhai, main aapki kya madad kar sakta hoon?";
+            } else if (lowerMessage.includes('attack path') || lowerMessage.includes('attacker path')) {
+                if (lowerMessage.includes('f-001')) {
+                    return "F-001 Attack Path: Internet → Web Service → F-001 Vulnerability → File Upload → Remote Code Execution → Database Access. Ye sabse critical hai kyunki attacker directly system pe control le sakta hai.";
+                } else if (lowerMessage.includes('f-002')) {
+                    return "F-002 Attack Path: Internet → SSH Service → F-002 Vulnerability → Brute Force Attack → Server Access → Privilege Escalation. Ye bhi critical hai kyunki attacker server pe access le sakta hai.";
+                } else if (lowerMessage.includes('f-003')) {
+                    return "F-003 Attack Path: Internet → Web Service → F-003 Vulnerability → SQL Injection → Database Access → Data Theft. Ye bhi high priority hai kyunki user data compromise ho sakta hai.";
+                } else if (lowerMessage.includes('f-004')) {
+                    return "F-004 Attack Path: Internet → Web Service → F-004 Vulnerability → Clickjacking → User Session Hijacking → Data Exposure. Ye medium priority hai lekin fix karna chahiye.";
+                } else {
+                    return "Konse finding ka attack path dekhna chahte ho? Example: 'Attack path for F-001' ya 'F-002 ka attacker path dikhao'";
                 }
-                return "Konse finding ka attack path dekhna chahte ho? Example: 'Attack path for F-001'";
             } else if (lowerMessage.includes('mitigation') || lowerMessage.includes('fix')) {
                 if (lowerMessage.includes('f-001') || lowerMessage.includes('cve-2021')) {
                     return "F-001 mitigation: 1) WP Payments plugin disable karo 2) Latest version install karo 3) File upload functionality temporarily block karo 4) Server par file type restrictions lagao.";
@@ -526,12 +799,14 @@
                     return "F-002 mitigation: 1) SSH ke liye key-based authentication use karo 2) Fail2ban install karo rate limiting ke liye 3) Strong password policy enforce karo 4) SSH port change karo default 22 se.";
                 } else if (lowerMessage.includes('f-003') || lowerMessage.includes('sql')) {
                     return "F-003 mitigation: 1) Input validation implement karo 2) Prepared statements use karo 3) Web Application Firewall (WAF) lagao 4) Regular security testing karo.";
+                } else if (lowerMessage.includes('f-004')) {
+                    return "F-004 mitigation: 1) X-Content-Type-Options header add karo 2) X-Frame-Options set karo 3) Content-Security-Policy implement karo 4) Strict-Transport-Security enable karo.";
                 }
                 return "Konse vulnerability ki mitigation steps chahiye? Example: 'Mitigation for F-001'";
             } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('namaste')) {
                 return "Namaste! Main aapka security assistant hoon. Aap vulnerabilities ke bare mein kuch bhi puch sakte hain — urgency, priority, mitigation, ya attack paths.";
             } else {
-                return "Mujhe samajh nahi aaya. Aap yeh puch sakte hain: 'Is this urgent?', 'Kisko pehle fix karna chahiye?', 'Attack path dikhao for F-001', ya 'Mitigation steps for CVE-2021-XXXXX'.";
+                return "Mujhe samajh nahi aaya. Aap yeh puch sakte hain: 'Is this urgent?', 'Kisko pehle fix karna chahiye?', 'Attack path dikhao for F-001', ya 'Mitigation steps for CVE-2021-93852'.";
             }
         }
 
@@ -635,4 +910,3 @@
 
         // Start the application
         init();
-    
