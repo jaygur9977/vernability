@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VulnScan AI | Centralized Vulnerability Detection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="dark">
+    <!-- Header -->
+    <header class="container">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            VulnScan AI
+        </div>
+        <div class="nav-links">
+            <a href="#" class="nav-link active">Home</a>
+            <a href="#" class="nav-link">Features</a>
+            <a href="#" class="nav-link">Documentation</a>
+            <a href="#" class="nav-link">Pricing</a>
+            <a href="#" class="nav-link">Contact</a>
+        </div>
+        <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>Advanced Threat Detection & Analysis</h1>
+            <p>Identify, prioritize, and remediate security vulnerabilities with AI-powered insights and comprehensive reporting</p>
+            
+            <div class="scanner-container">
+                <div class="scan-object document active">
+                    <div class="document">
+                        <div class="document-lines">
+                            <div class="document-line"></div>
+                            <div class="document-line"></div>
+                            <div class="document-line"></div>
+                            <div class="document-line"></div>
+                            <div class="document-line"></div>
+                        </div>
+                    </div>
+                    <div class="scan-beam"></div>
+                </div>
+                
+                <div class="scan-object website">
+                    <div class="website">
+                        <div class="website-content">
+                            <div class="website-line"></div>
+                            <div class="website-line"></div>
+                            <div class="website-line"></div>
+                        </div>
+                    </div>
+                    <div class="scan-beam"></div>
+                </div>
+                
+                <!-- Warning Icons -->
+                <div class="warning-icon" style="top: 10%; left: 10%;">⚠️</div>
+                <div class="warning-icon" style="top: 20%; right: 15%;">⚠️</div>
+                <div class="warning-icon" style="bottom: 30%; left: 5%;">⚠️</div>
+                <div class="warning-icon" style="bottom: 10%; right: 10%;">⚠️</div>
+                <div class="warning-icon" style="top: 40%; left: 20%;">⚠️</div>
+                <div class="warning-icon" style="top: 60%; right: 5%;">⚠️</div>
+            </div>
+            
+            <div class="cta-buttons">
+                <a href="#target-section" class="btn btn-primary">
+                    <i class="fas fa-rocket"></i>
+                    Start Scanning
+                </a>
+                <a href="#features" class="btn btn-secondary">
+                    <i class="fas fa-play-circle"></i>
+                    Watch Demo
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <h2 class="section-title">Powerful Security Features</h2>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h3 class="feature-title">Vulnerability Detection</h3>
+                    <p class="feature-description">Automatically identify security flaws across your applications, networks, and infrastructure with advanced scanning techniques.</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="feature-title">AI-Powered Analysis</h3>
+                    <p class="feature-description">Leverage machine learning to prioritize risks, predict attack vectors, and provide intelligent remediation guidance.</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3 class="feature-title">Attack Path Mapping</h3>
+                    <p class="feature-description">Visualize how attackers could exploit vulnerabilities to move through your environment and reach critical assets.</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Comprehensive Reporting</h3>
+                    <p class="feature-description">Generate detailed reports with actionable insights for stakeholders, developers, and security teams.</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3 class="feature-title">AI Security Assistant</h3>
+                    <p class="feature-description">Get answers to your security questions in natural language with our intelligent chat interface.</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Continuous Monitoring</h3>
+                    <p class="feature-description">Set up automated scanning schedules to continuously monitor your assets for new vulnerabilities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Target Input Section -->
+    <section class="target-section" id="target-section">
+        <div class="target-card fade-in">
+            <h2>Scan Target</h2>
+            
+            <div class="target-options">
+                <button class="target-option active" data-type="domain">Domain / URL</button>
+                <button class="target-option" data-type="ip">IP Address</button>
+                <button class="target-option" data-type="upload">Upload Code (zip)</button>
+            </div>
+            
+            <div class="target-input">
+                <input type="text" class="input-field" id="domainInput" placeholder="Enter domain or URL (e.g., example.com)" value="shopka.example">
+                
+                <input type="text" class="input-field" id="ipInput" placeholder="Enter IP address (e.g., 192.168.1.1)" style="display: none;">
+                
+                <div class="upload-zone" id="uploadZone" style="display: none;">
+                    <div class="upload-icon">📁</div>
+                    <p>Drag & drop your code folder (ZIP) here or click to browse</p>
+                    <p class="file-name" id="fileName"></p>
+                </div>
+                <input type="file" id="fileInput" accept=".zip" style="display: none;">
+            </div>
+            
+            <div class="authorization">
+                <input type="checkbox" class="auth-checkbox" id="authCheckbox">
+                <label for="authCheckbox">I have permission to scan this target</label>
+            </div>
+            
+            <button class="start-scan-btn" id="startScanBtn" disabled>
+                <i class="fas fa-search"></i>
+                Start Security Scan
+            </button>
+        </div>
+    </section>
+
+    <!-- Scan Progress Modal -->
+    <div class="modal" id="scanModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Security Scan in Progress</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <div class="scan-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">
+                    <span>Initializing...</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+            </div>
+            
+            <div class="scan-logs" id="scanLogs">
+                <div class="log-entry">
+                    <span class="log-time">[19:00:00]</span>
+                    <span>Initializing scanner...</span>
+                </div>
+                <div class="log-entry">
+                    <span class="log-time">[19:00:01]</span>
+                    <span>Loading vulnerability databases...</span>
+                </div>
+                <div class="log-entry">
+                    <span class="log-time">[19:00:02]</span>
+                    <span>Establishing connection to target...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Section -->
+    <section class="report-section" id="reportSection">
+        <div class="container">
+            <div class="report-header">
+                <div>
+                    <h2 class="section-title">Vulnerability Report</h2>
+                    <div class="report-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Target</span>
+                            <span class="meta-value" id="reportTarget">shopka.example</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Scan Date</span>
+                            <span class="meta-value" id="reportDate">October 9, 2025</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Scan Duration</span>
+                            <span class="meta-value" id="reportDuration">2 minutes 45 seconds</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="report-actions">
+                    <button class="btn btn-secondary" id="exportPdfBtn">
+                        <i class="fas fa-download"></i>
+                        Export PDF
+                    </button>
+                    <button class="btn btn-primary" id="rescanBtn">
+                        <i class="fas fa-redo"></i>
+                        Rescan
+                    </button>
+                </div>
+            </div>
+            
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-value stat-critical" id="criticalCount">1</div>
+                    <div class="stat-label">Critical Vulnerabilities</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value stat-high" id="highCount">2</div>
+                    <div class="stat-label">High Vulnerabilities</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value stat-medium" id="mediumCount">1</div>
+                    <div class="stat-label">Medium Vulnerabilities</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value stat-low" id="lowCount">0</div>
+                    <div class="stat-label">Low Vulnerabilities</div>
+                </div>
+            </div>
+            
+            <div class="report-layout">
+                <div class="findings-list" id="findingsList">
+                    <!-- Findings will be populated here -->
+                </div>
+                
+                <div class="right-panel">
+                    <div class="chat-panel">
+                        <h3 class="chat-header">AI Security Assistant</h3>
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message bot-message">
+                                <strong>Namaste! I'm your security assistant.</strong><br><br>
+                                You can ask me questions like:<br>
+                                - "Is this urgent?"<br>
+                                - "Kisko pehle fix karna chahiye?"<br>
+                                - "Attack path dikhao for finding #1"<br>
+                                - "Mitigation steps for CVE-2021-XXXXX"
+                            </div>
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="chatInput" placeholder="Ask about the vulnerabilities...">
+                            <button class="send-btn" id="sendChatBtn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Attack Path Modal -->
+    <div class="modal attack-path-modal" id="attackPathModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Attack Path Visualization</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="attack-path-container">
+                <div class="attack-path" id="attackPath">
+                    <div class="node node-internet" data-tooltip="External attacker with network access">Internet</div>
+                    <div class="node node-service" data-tooltip="Vulnerable service exposed to the internet">Web Service (Port 80/443)</div>
+                    <div class="node node-vuln" data-tooltip="Specific vulnerability allowing unauthorized access">Vulnerability: CVE-2021-XXXXX</div>
+                    <div class="node node-db" data-tooltip="Sensitive data storage">Database</div>
+                    
+                    <!-- Connections -->
+                    <div class="connection" id="conn1"></div>
+                    <div class="connection" id="conn2"></div>
+                    <div class="connection" id="conn3"></div>
+                </div>
+                <div class="node-tooltip" id="nodeTooltip"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evidence Viewer Modal -->
+    <div class="modal evidence-modal" id="evidenceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Evidence Details</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="evidence-content" id="evidenceContent"></div>
+            <button class="copy-btn" id="copyEvidenceBtn">
+                <i class="fas fa-copy"></i>
+                Copy to Clipboard
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Operation completed successfully!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-shield-alt"></i>
+                    VulnScan AI
+                </div>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                    <a href="#" class="footer-link">Documentation</a>
+                    <a href="#" class="footer-link">Support</a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>VulnScan AI - Centralized Vulnerability Detection & Intelligent Query Interface</p>
+                <p>This is a frontend prototype with simulated data. No actual scanning is performed.</p>
+            </div>
+        </div>
+    </footer>
+
+   <script src="script.js"></script>
+</body>
+</html>
