@@ -10,7 +10,7 @@
                     "title": "Outdated WP Payments plugin",
                     "severity": "Critical",
                     "cve": "CVE-2021-73492",
-                    "cvss": 9.1,
+                    "csvv": 9.1,
                     "description": "Plugin allows arbitrary file upload via 'amount' parameter. This vulnerability could allow an attacker to upload malicious files to the server and potentially execute arbitrary code.",
                     "component": "WordPress plugin wp-payments v1.2",
                     "evidence": "HTTP response shows /wp-content/plugins/wp-payments/pay.php with vulnerable param 'amount'",
@@ -35,7 +35,7 @@
                     "title": "Open SSH (port 22) with weak password policy",
                     "severity": "High",
                     "cve": null,
-                    "cvss": 7.4,
+                    "csvv": 7.4,
                     "description": "SSH accepts password auth; weak policy detected. This could allow brute force attacks to gain unauthorized access to the server.",
                     "component": "OpenSSH 7.2p2",
                     "evidence": "SSH allows password login; login attempts not rate-limited.",
@@ -57,7 +57,7 @@
                     "title": "SQL Injection in login form",
                     "severity": "High",
                     "cve": "CVE-2020-58723",
-                    "cvss": 8.2,
+                    "csvv": 8.2,
                     "description": "Login form vulnerable to SQL injection attacks. Attackers could bypass authentication or extract sensitive data from the database.",
                     "component": "Custom login script login.php",
                     "evidence": "SQL errors returned when injecting special characters in username field.",
@@ -81,7 +81,7 @@
                     "title": "Missing security headers",
                     "severity": "Medium",
                     "cve": null,
-                    "cvss": 5.3,
+                    "csvv": 5.3,
                     "description": "Missing X-Content-Type-Options, X-Frame-Options, and Content-Security-Policy headers. This could expose the application to clickjacking and MIME-type sniffing attacks.",
                     "component": "Web server configuration",
                     "evidence": "HTTP response headers analysis shows missing security headers.",
@@ -396,7 +396,7 @@
                     
                     <div class="finding-details">
                         ${finding.cve ? `<div class="cve-id">${finding.cve}</div>` : ''}
-                        <div class="cvss-badge">CVSS: ${finding.cvss}</div>
+                        <div class="csvv-badge">CSVV: ${finding.csvv}</div>
                     </div>
                     
                     <p class="finding-description">${finding.description}</p>
